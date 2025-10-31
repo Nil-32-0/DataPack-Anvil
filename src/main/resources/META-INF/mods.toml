@@ -1,24 +1,17 @@
 modLoader="javafml"
-loaderVersion="${loader_version_range}"
+loaderVersion="[47,)"
 license="LGPL 2.1"
 authors="Sirttas"
 
 [[mods]] 
 modId="dpanvil"
-version="${dpanvil_version}"
+version="${file.jarVersion}"
 displayName="DataPack Anvil"
 description='''A library mod to create datapack driven mods.'''
 
 [[dependencies.dpanvil]]
-    modId="neoforge"
-    type="required"
-    versionRange="${neo_version_range}"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.dpanvil]]
-    modId="minecraft"
-    type="required"
-    versionRange="${minecraft_version_range}"
+    modId="forge"
+    mandatory=true
+    versionRange="[47.1.1,)"
     ordering="NONE"
     side="BOTH"

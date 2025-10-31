@@ -9,11 +9,10 @@ import com.mojang.serialization.Decoder;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Keyable;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderOwner;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import sirttas.dpanvil.api.DataPackAnvilApi;
 import sirttas.dpanvil.api.codec.CodecHelper;
 import sirttas.dpanvil.api.event.DataManagerReloadEvent;
@@ -46,14 +45,7 @@ import java.util.stream.Stream;
  * 
  * @param <T> the type of data the manager contains
  */
-public interface IDataManager<T> extends PreparableReloadListener, Codec<T>, Keyable, HolderOwner<T> {
-
-	/**
-	 * The key used to register the manager
-	 *
-	 * @return The key used to register the manager
-	 */
-	ResourceKey<IDataManager<T>> getKey();
+public interface IDataManager<T> extends PreparableReloadListener, Codec<T>, Keyable {
 
 	/**
 	 * The {@link Class} used to define the type of managed data
@@ -119,29 +111,7 @@ public interface IDataManager<T> extends PreparableReloadListener, Codec<T>, Key
 	 */
 	@Nonnull
 	default Holder<T> getOrCreateHolder(@Nonnull ResourceKey<T> key) {
-		return getOrCreateHolder(key.location());
-	}
-
-
-	/**
-	 * Get a {@link Holder} that wrap a value contained in this manager.
-	 *
-	 * @param key A {@link ResourceLocation} that map a data
-	 * @return A {@link Holder}
-	 */
-	@Nonnull
-	default Holder<T> getOrCreateHolder(@Nonnull ResourceLocation key) {
 		return Holder.direct(get(key));
-	}
-
-	@Nonnull
-	default Codec<Holder<T>> holderCodec() {
-		return ResourceLocation.CODEC.xmap(this::getOrCreateHolder, h -> {
-			if (h instanceof Holder.Reference<T> r) {
-				return r.key().location();
-			}
-			return getId(h.value());
-		});
 	}
 
 	/**
@@ -239,8 +209,16 @@ public interface IDataManager<T> extends PreparableReloadListener, Codec<T>, Key
 
 	@Nonnull
 	static <T> Builder<T> builder(@Nonnull Class<T> type, @Nonnull ResourceKey<IDataManager<T>> key) {
-		return DataPackAnvilApi.service().createDataManagerBuilder(type, key);
+		var location = key.location();
+
+		return builder(type, location.getNamespace() + "/" + location.getPath());
 	}
+
+	@Nonnull
+	static <T> Builder<T> builder(@Nonnull Class<T> type, @Nonnull String folder) {
+		return DataPackAnvilApi.service().createDataManagerBuilder(type, folder);
+	}
+
 
 	interface Builder<T> {
 
@@ -249,8 +227,6 @@ public interface IDataManager<T> extends PreparableReloadListener, Codec<T>, Key
 		default Builder<T> withDefault(T defaultValue) {
 			return withDefault(id -> defaultValue);
 		}
-
-		Builder<T> folder(String folder);
 
 		Builder<T> withDefault(Function<ResourceLocation, T> factory);
 

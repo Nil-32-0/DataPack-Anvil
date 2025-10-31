@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.fml.InterModComms;
+import net.minecraftforge.fml.InterModComms;
 import sirttas.dpanvil.api.DataPackAnvilApi;
 import sirttas.dpanvil.api.data.IDataManager;
 
@@ -16,18 +16,20 @@ public class DataManagerIMC<T> {
 
 	public static final String METHOD = "data_manager";
 
+	private final ResourceKey<IDataManager<T>> key;
 	private final IDataManager<T> manager;
 	private Codec<T> codec;
 	private Function<JsonElement, T> readJson;
 	private Function<FriendlyByteBuf, T> readPacket;
 	private BiConsumer<FriendlyByteBuf, T> writePacket;
 
-	public DataManagerIMC(IDataManager<T> manager) {
+	public DataManagerIMC(ResourceKey<IDataManager<T>> key, IDataManager<T> manager) {
+		this.key = key;
 		this.manager = manager;
 	}
 
 	public ResourceKey<IDataManager<T>> getKey() {
-		return manager.getKey();
+		return key;
 	}
 
 	public IDataManager<T> getManager() {
