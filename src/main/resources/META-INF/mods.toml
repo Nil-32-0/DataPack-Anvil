@@ -1,10 +1,10 @@
 modLoader="javafml"
 loaderVersion="[47,)"
 license="LGPL 2.1"
-authors="Sirttas"
+authors="Sirttas, Nil"
 
 [[mods]] 
-modId="dpanvil"
+modId="dpanvil_m"
 version="${file.jarVersion}"
 displayName="DataPack Anvil"
 description='''A library mod to create datapack driven mods.'''
