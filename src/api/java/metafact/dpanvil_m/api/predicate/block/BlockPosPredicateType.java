@@ -1,6 +1,7 @@
 package metafact.dpanvil_m.api.predicate.block;
 
 import com.mojang.serialization.Codec;
+import metafact.dpanvil_m.api.predicate.block.direction.FacingBlockPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -43,6 +44,7 @@ public record BlockPosPredicateType<T extends IBlockPosPredicate>(Codec<T> codec
 	public static final RegistryObject<BlockPosPredicateType<MatchBlockStatePredicate>> MATCH_STATE = register(MatchBlockStatePredicate.CODEC, MatchBlockStatePredicate.NAME);
 	public static final RegistryObject<BlockPosPredicateType<OffsetBlockPredicate>> OFFSET = register(OffsetBlockPredicate.CODEC, OffsetBlockPredicate.NAME);
 	public static final RegistryObject<BlockPosPredicateType<CacheBlockPredicate>> CACHE = register(CacheBlockPredicate.CODEC, CacheBlockPredicate.NAME);
+    public static final RegistryObject<BlockPosPredicateType<FacingBlockPredicate>> FACING = register(FacingBlockPredicate.CODEC, FacingBlockPredicate.NAME);
 
 	private static <T extends IBlockPosPredicate> RegistryObject<BlockPosPredicateType<T>> register(Codec<T> codec, String name) {
 		return DEFERRED_REGISTRY.register(name, () -> new BlockPosPredicateType<>(codec));
